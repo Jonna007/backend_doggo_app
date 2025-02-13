@@ -1,0 +1,26 @@
+server:
+  port: 8081
+  error:
+    include-message: always
+#Configuracion de spring
+spring:
+  #Configuracion de migracion
+  flyway:
+    enabled: true
+    baselineVersion: 1
+    locations:
+      classpath: db/migration
+    sqlMigrationSuffixes: .sql
+    baselineOnMigrate: true
+    sqlMigrationPrefix: V
+    schemas: public
+
+  datasource:
+    url: jdbc:postgresql://a.oregon-postgres.render.com:5432/doggo_backend_db?socketTimeout=3
+    username: doggo_backend_db_user
+    password: 7vdTBfjTBAEAWL4jvExJb7UPpwxaar9u
+    driverClassName: org.postgresql.Driver
+
+logging:
+  level:
+    org.flywaydb: DEBUG
