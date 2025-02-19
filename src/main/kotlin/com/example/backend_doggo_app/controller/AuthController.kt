@@ -24,8 +24,8 @@ class AuthController {
 
     @PostMapping("/login")
     fun login(@RequestBody loginDto: LoginDto): ResponseEntity<Map<String, String>> {
-        val response = userSecurityService.login(loginDto)
-        return ResponseEntity(response, HttpStatus.OK)
+        val token = userSecurityService.login(loginDto)
+        return ResponseEntity(token, HttpStatus.OK)
     }
 
     @PostMapping("/register")

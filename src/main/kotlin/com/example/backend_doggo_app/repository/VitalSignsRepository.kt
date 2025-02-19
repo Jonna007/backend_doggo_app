@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface VitalSignsRepository : JpaRepository<VitalSignsEntity, Long> {
     fun findByPetId(petId: Long): List<VitalSignsEntity>
+    fun findFirstByPetIdOrderByTimestampDesc(petId: Long): VitalSignsEntity?
 }
 

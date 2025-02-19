@@ -1,5 +1,7 @@
 package com.example.backend_doggo_app.service
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.example.backend_doggo_app.config.JwtUtil
 import com.example.backend_doggo_app.dto.LoginDto
 import com.example.backend_doggo_app.dto.RegisterDto
@@ -10,6 +12,7 @@ import com.example.backend_doggo_app.repository.RoleRepository
 import com.example.backend_doggo_app.repository.UserRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
@@ -20,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import java.util.*
+
 
 @Service
 class UserSecurityService(
@@ -35,6 +40,9 @@ class UserSecurityService(
     private val authenticationService: AuthenticationService by lazy {
         applicationContext.getBean(AuthenticationService::class.java)
     }
+
+    @Value("\${jwt.secret}")
+    private lateinit var secret: String
 
     override fun loadUserByUsername(email: String): UserDetails {
         val userEntity = userRepository.findByEmail(email)
@@ -57,8 +65,13 @@ class UserSecurityService(
 
     fun login(loginDto: LoginDto): Map<String, String> {
         val authentication = authenticationService.authenticate(loginDto.email, loginDto.password)
-        val jwt = jwtUtil.create(authentication)
-        return mapOf("token" to jwt!!)
+        val user = loadUserByUsername(loginDto.email)
+        val token = JWT.create()
+            .withSubject(user.username)
+            .withExpiresAt(Date(System.currentTimeMillis() + 10 * 60 * 1000))
+            .withClaim("roles", user.authorities.map { it.authority })
+            .sign(Algorithm.HMAC256(secret.toByteArray()))
+        return mapOf("token" to token)
     }
 
     fun register(registerDto: RegisterDto): UserEntity {

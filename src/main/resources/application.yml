@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
   error:
     include-message: always
 #Configuracion de spring
@@ -24,3 +24,9 @@ spring:
 logging:
   level:
     org.flywaydb: DEBUG
+
+jwt:
+  secret: 112233445566
+
+cors:
+  allowedOrigins: http://localhost:19006,http://192.168.18.77:19006,http://localhost:19000,http://localhost:19001,http://localhost:19002,http://192.168.18.77:19000,http://192.168.18.77:19001,http://192.168.18.77:19002,exp://192.168.18.77:19000

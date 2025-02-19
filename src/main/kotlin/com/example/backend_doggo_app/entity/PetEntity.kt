@@ -4,30 +4,32 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "pets")
-open class PetEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+class PetEntity {
     @Id
-    @Column(updatable = false)
-    open var id: Long? = null
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
     @Column(nullable = false)
-    open var name: String = ""
+    lateinit var name: String
 
     @Column(nullable = false)
-    open var species: String = ""
+    lateinit var species: String
 
-    open var race: String? = null
+    var race: String? = null
 
-    open var age: Int? = null
+    var age: Int? = null
 
     @Column(name = "owner_name")
-    open var ownerName: String? = null
+    var ownerName: String? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    open var user: UserEntity? = null
+    lateinit var user: UserEntity
 
     @OneToMany(mappedBy = "pet", cascade = [CascadeType.ALL], orphanRemoval = true)
-    open var vitalSigns: MutableList<VitalSignsEntity> = mutableListOf()
+    var vitalSigns: MutableList<VitalSignsEntity> = mutableListOf()
+
+    @OneToMany(mappedBy = "pet", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var devices: MutableList<DeviceEntity> = mutableListOf()
 }
 

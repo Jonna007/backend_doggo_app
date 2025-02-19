@@ -2,27 +2,28 @@ package com.example.backend_doggo_app.entity
 
 import jakarta.persistence.*
 import java.math.BigDecimal
-import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "vital_signs")
-open class VitalSignsEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+class VitalSignsEntity {
     @Id
-    @Column(updatable = false)
-    open var id: Long? = null
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
-    open var temperature: BigDecimal? = null
+    var temperature: BigDecimal? = null
 
     @Column(name = "heart_rate")
-    open var heartRate: Int? = null
+    var heartRate: Int? = null
 
-    open var timestamp: Timestamp? = null
-
-    open var device: String? = null
+    var timestamp: LocalDateTime = LocalDateTime.now()
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
-    open lateinit var pet: PetEntity
+    lateinit var pet: PetEntity
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_id")
+    lateinit var device: DeviceEntity
 }
 
